@@ -15,6 +15,10 @@ function getOptions($env_path = ".env")
   return $options;
 }
 
-function getNgrokPublicUrl($ngrok_web_interface_url = "http://localhost:4040/api/tunnels") {
-  return json_decode( file_get_contents($ngrok_web_interface_url) )->tunnels[0]->public_url;
+function getNgrokPublicUrl($ngrok_web_interface_url = "http://localhost:4040/api/tunnels")
+{
+  $ngrok_api_resp = json_decode(file_get_contents($ngrok_web_interface_url));
+  $public_urls[0] = $ngrok_api_resp->tunnels[0]->public_url;
+  $public_urls[1] = $ngrok_api_resp->tunnels[1]->public_url;
+  return strpos($public_urls[0], 'https:') ? $public_urls[0] : $public_urls[1];
 }
