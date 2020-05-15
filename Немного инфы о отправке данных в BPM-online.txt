@@ -1,0 +1,21 @@
+fetch("https://crm.astana-motors.kz/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData", {
+  "headers": {
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9,ru;q=0.8",
+    "cache-control": "no-cache",
+    "content-type": "application/json; charset=UTF-8",
+    "pragma": "no-cache",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "cross-site"
+  },
+  "referrer": "https://hyundai-astana.kz/ru/callback",
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": "{\"formData\":{\"formId\":\"e6067ab7-4d8e-4264-9374-b2560f89f809\",\"formFieldsData\":[{\"name\":\"Name\",\"value\":\"Тест Тест Тест\"},{\"name\":\"Email\",\"value\":\"test@mail.ru\"},{\"name\":\"MobilePhone\",\"value\":\"+7 777 777 7777\"},{\"name\":\"Commentary\",\"value\":\"Test\"},{\"name\":\"TsiModel\",\"value\":\"Новый Accent\"},{\"name\":\"BpmHref\",\"value\":\"https://hyundai-astana.kz/ru/callback\"},{\"name\":\"BpmSessionId\",\"value\":\"e3a8b057-9d44-c707-c483-d516de1d745a\"}],\"options\":{\"extendResponseWithExceptionType\":true}}}",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "omit"
+});
+
+
+{"formData":{"formId":"e6067ab7-4d8e-4264-9374-b2560f89f809","formFieldsData":[{"name":"Name","value":"Тест Тест Тест"},{"name":"Email","value":"test@mail.ru"},{"name":"MobilePhone","value":"+7 777 777 7777"},{"name":"Commentary","value":"Test"},{"name":"TsiModel","value":"Новый Accent"},{"name":"BpmHref","value":"https://hyundai-astana.kz/ru/callback"},{"name":"BpmSessionId","value":"e3a8b057-9d44-c707-c483-d516de1d745a"}],"options":{"extendResponseWithExceptionType":true}}}

@@ -1,0 +1,51 @@
+NODE JS
+
+fetch("https://hyundai-astana.kz/form/rubric/13", {
+  "headers": {
+    "accept": "application/json, text/javascript, */*; q=0.01",
+    "accept-language": "en-US,en;q=0.9,ru;q=0.8",
+    "cache-control": "no-cache",
+    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "pragma": "no-cache",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-requested-with": "XMLHttpRequest",
+    "cookie": "PHPSESSID=kjdmrdo8qjo732ef2eeir0f4sq"
+  },
+  "referrer": "https://hyundai-astana.kz/ru/trade-in/",
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": "Form%5Brubric_id%5D=13&Form%5Bname%5D=%D1%82%D0%B5%D1%81%D1%82+%D1%82%D0%B5%D1%81%D1%82+%D1%82%D0%B5%D1%81%D1%82&Form%5Bcity%5D=6&Form%5Bphone%5D=%2B7+777+777+7777&Form%5Bemail%5D=test%40mail.ru&Form%5Bsubj%5D=%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9+Accent&Form%5Btext%5D=Test&Form%5Bagree%5D=0&Form%5Bagree%5D=1",
+  "method": "POST",
+  "mode": "cors"
+});
+
+POWER SHELL
+
+Invoke-WebRequest -Uri "https://hyundai-astana.kz/form/rubric/13" `
+-Method "POST" `
+-Headers @{
+"method"="POST"
+  "authority"="hyundai-astana.kz"
+  "scheme"="https"
+  "path"="/form/rubric/13"
+  "pragma"="no-cache"
+  "cache-control"="no-cache"
+  "accept"="application/json, text/javascript, */*; q=0.01"
+  "dnt"="1"
+  "x-requested-with"="XMLHttpRequest"
+  "user-agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
+  "origin"="https://hyundai-astana.kz"
+  "sec-fetch-site"="same-origin"
+  "sec-fetch-mode"="cors"
+  "sec-fetch-dest"="empty"
+  "referer"="https://hyundai-astana.kz/ru/trade-in/"
+  "accept-encoding"="gzip, deflate, br"
+  "accept-language"="en-US,en;q=0.9,ru;q=0.8"
+  "cookie"="PHPSESSID=kjdmrdo8qjo732ef2eeir0f4sq"
+} `
+-ContentType "application/x-www-form-urlencoded; charset=UTF-8" `
+-Body "Form%5Brubric_id%5D=13&Form%5Bname%5D=%D1%82%D0%B5%D1%81%D1%82+%D1%82%D0%B5%D1%81%D1%82+%D1%82%D0%B5%D1%81%D1%82&Form%5Bcity%5D=6&Form%5Bphone%5D=%2B7+777+777+7777&Form%5Bemail%5D=test%40mail.ru&Form%5Bsubj%5D=%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9+Accent&Form%5Btext%5D=Test&Form%5Bagree%5D=0&Form%5Bagree%5D=1"
+
+CURL
+
