@@ -28,3 +28,6 @@ $RECYCLE.BIN/
 vendor
 composer.lock
 .vscode
+.idea
+/nbproject/private/
+/nbproject/
