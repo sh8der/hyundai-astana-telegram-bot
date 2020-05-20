@@ -31,3 +31,4 @@ composer.lock
 .idea
 /nbproject/private/
 /nbproject/
+/logs/*.txt
