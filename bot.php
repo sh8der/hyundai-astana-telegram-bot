@@ -1,19 +1,35 @@
 <?php
+
 use Telegram\Bot\Api;
+use RedBeanPHP\R;
 
 require_once "vendor/autoload.php";
+require_once "classes/BotWrapper.php";
 require_once "functions.php";
 
+$options = getOptions();
 try {
-  $telegram = new Api(getOptions()["TELEGRAM_BOT_TOKEN"]);
-  $chatId = $telegram->getWebhookUpdates()->getMessage()->getChat()->getId();
-  $text = $telegram->getWebhookUpdates()->getMessage()->getText();
-  $telegram->sendMessage(['chat_id' => $chatId, 'text' => "Вы написали: {$text}"]);
-  var_dump($telegram->getWebhookUpdates());
-} catch (\Telegram\Bot\Exceptions\TelegramSDKException $e) {
-  $currentDate = date("d.m.Y");
-  file_put_contents(__DIR__ . "/log.txt", "[{$currentDate}] : {$e}");
+  R::ext('xdispense', function ($type) {
+    return R::getRedBean()->dispense($type);
+  });
+} catch (\RedBeanPHP\RedException $e) {
+  writeToLogFile(['data' => $e]);
 }
 
+R::setup(
+  "mysql:host={$options['DB_HOST']};dbname={$options['DB_NAME']}",
+  $options['DB_USER'],
+  $options['DB_PASS']
+);
+R::freeze( $options['DB_FREEZE'] );
 
-?>
+try {
+  $telegram = new BotWrapper($options["TELEGRAM_BOT_TOKEN"]);
+  $telegram->hears('Hello', 'BotWrapper::replyHello');
+  $telegram->hears('/start', 'BotWrapper::replyStart');
+} catch (\Telegram\Bot\Exceptions\TelegramSDKException $e) {
+  writeToLogFile(['data' => $e]);
+}
+
+R::close();
+
