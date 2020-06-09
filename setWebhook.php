@@ -3,7 +3,12 @@ require_once('vendor/autoload.php');
 require_once('functions.php');
 $guzzle = new GuzzleHttp\Client(['verify' => false]);
 $token = getOptions()['TELEGRAM_BOT_TOKEN'];
-$currentPublicUrl = getNgrokPublicUrl() . "/bot.php";
+$production = (bool)getOptions()['PRODUCTION'];
+if ($production) {
+  $currentPublicUrl = "https://" . trim($_SERVER['HTTP_HOST']) . "/bot.php";
+} else {
+  $currentPublicUrl = getNgrokPublicUrl() . "/bot.php";
+}
 $removeWebHookURL = "https://api.telegram.org/bot{$token}/deleteWebhook";
 $setWebHookURL = "https://api.telegram.org/bot{$token}/setWebhook?url={$currentPublicUrl}";
 

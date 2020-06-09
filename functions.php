@@ -2,6 +2,8 @@
 if (function_exists('date_default_timezone_set'))
   date_default_timezone_set('Asia/Almaty');
 
+$envOptions = [];
+
 /**
  * Get options from .env file
  *
@@ -10,17 +12,19 @@ if (function_exists('date_default_timezone_set'))
  */
 function getOptions($env_path = ".env")
 {
-  $options = [];
+  if (!empty($envOptions)) {
+    return $envOptions;
+  }
 
   if ($file = fopen($env_path, "r")) {
     while (!feof($file)) {
       list($opt_name, $value) = explode("=", fgets($file));
-      $options[$opt_name] = trim($value);
+      $envOptions[$opt_name] = trim($value);
     }
     fclose($file);
   }
 
-  return $options;
+  return $envOptions;
 }
 
 /**
@@ -33,11 +37,11 @@ function getNgrokPublicUrl($ngrok_web_interface_url = "http://localhost:4040/api
 {
 
   $ngrok_api_resp = @file_get_contents($ngrok_web_interface_url);
-//  if (empty($ngrok_api_resp)) {
-//    $error_message = "Не получены данные от Ngrok api, возможно он не запущен.";
-//    writeToLogFile(['data' => $error_message]);
-//    die($error_message);
-//  }
+  if (empty($ngrok_api_resp)) {
+    $error_message = "Не получены данные от Ngrok api, возможно он не запущен.";
+    writeToLogFile(['data' => $error_message]);
+    die($error_message);
+  }
   $ngrok_api_resp = json_decode($ngrok_api_resp);
   $public_urls[0] = $ngrok_api_resp->tunnels[0]->public_url;
   $public_urls[1] = $ngrok_api_resp->tunnels[1]->public_url;

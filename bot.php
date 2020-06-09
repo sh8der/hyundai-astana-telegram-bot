@@ -4,8 +4,10 @@ use Telegram\Bot\Api;
 use RedBeanPHP\R;
 
 require_once "vendor/autoload.php";
-require_once "classes/BotWrapper.php";
 require_once "functions.php";
+require_once "classes/BotWrapper.php";
+require_once "classes/BaseState.php";
+define("ABS", __DIR__);
 
 $options = getOptions();
 try {
@@ -25,8 +27,7 @@ R::freeze( $options['DB_FREEZE'] );
 
 try {
   $telegram = new BotWrapper($options["TELEGRAM_BOT_TOKEN"]);
-  $telegram->hears('Hello', 'BotWrapper::replyHello');
-  $telegram->hears('/start', 'BotWrapper::replyStart');
+  $telegram->startReply();
 } catch (\Telegram\Bot\Exceptions\TelegramSDKException $e) {
   writeToLogFile(['data' => $e]);
 }
