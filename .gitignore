@@ -36,3 +36,4 @@ composer.lock
 *.jpg
 *.png
 menu-markup.json
+playground.php

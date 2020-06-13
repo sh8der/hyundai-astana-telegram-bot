@@ -23,7 +23,7 @@ R::setup(
   $options['DB_USER'],
   $options['DB_PASS']
 );
-R::freeze( $options['DB_FREEZE'] );
+R::freeze($options['DB_FREEZE']);
 
 try {
   $telegram = new BotWrapper($options["TELEGRAM_BOT_TOKEN"]);
