@@ -48,13 +48,16 @@ class BotWrapper extends \Telegram\Bot\Api
 
   public function startReply()
   {
-
+    
     $stateControllerName = ucfirst(
       $this->getStateControllerName(
         $this->BotWrapperCurrentMessageText,
         $this->BotWrapperCurrentUserStore['lang']
       )
     );
+    
+    if ($stateControllerName == "CurrentState")
+      $stateControllerName = $this->BotWrapperCurrentUserStore['current_state'];
 
     try {
       require_once(self::StateControllerPath . "/{$stateControllerName}.php");
