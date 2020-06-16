@@ -1,6 +1,7 @@
 {
     "require": {
         "irazasyed/telegram-bot-sdk": "2.0",
-        "gabordemooij/redbean": "^5.5"
+        "gabordemooij/redbean": "^5.5",
+        "phpmailer/phpmailer": "^6.1"
     }
 }
