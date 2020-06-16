@@ -1,6 +1,8 @@
 <?php
 
 use RedBeanPHP\R;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Form extends BaseState
 {
@@ -14,27 +16,33 @@ class Form extends BaseState
   public function init($bot)
   {
     $this->bot = $bot;
-    $this->thisForm = R::findOne(
-      'form',
-      'name = ?',
-      [$this->bot->BotWrapperCurrentMessageText]
-    );
-    $this->thisFormFields = json_decode($this->thisForm['fields'], true);
+    
     try {
       $this->userStateTempData = json_decode($this->bot->BotWrapperCurrentUserStore['state_temp_data'], true);
     } catch (Exception $e) {
       writeToLogFile(['data' => $e]);
     }
     if (empty($this->userStateTempData['form'])) {
+      $this->thisForm = R::findOne(
+        'form',
+        'name = ?',
+        [$this->bot->BotWrapperCurrentMessageText]
+      );
+      $this->thisFormFields = json_decode($this->thisForm['fields'], true);
+      $this->userStateTempData['form_info'] = [
+        'end_text' => $this->thisForm['end_text'],
+        'form_name' => $this->bot->BotWrapperCurrentMessageText
+      ];
+//      var_dump($this->userStateTempData);
       $this->sendTyping();
       $this->sendMessage([
         'text' => $this->thisForm['start_text']
       ]);
-      $this->setUserFormState($this->thisFormFields);
-      $this->userStateTempData = ['form' => $this->thisFormFields];
+      $this->userStateTempData['form'] = $this->thisFormFields;
+      $this->setUserFormState($this->userStateTempData);
     }
     $this->thisFormCurrentFieldName = $this->detectCurrentField();
-    print_r($this->thisFormCurrentFieldName);
+//    print_r($this->thisFormCurrentFieldName);
     $this->startPool($this->thisFormCurrentFieldName);
   }
   
@@ -74,24 +82,33 @@ class Form extends BaseState
     }
 
     $this->userStateTempData['form'][$fieldName] = $thisField;
-    $this->setUserFormState($this->userStateTempData['form']);
+    var_dump($this->userStateTempData);
+    $this->setUserFormState($this->userStateTempData);
+//    $this->setUserFormState($this->userStateTempData['form']);
     if ($this->toNextStep)
       $this->nextStep();
   }
 
   public function nextStep()
   {
-    print_r("to next step\r");
+//    print_r("to next step\r");
     $this->bot->loadUser();
     $this->userStateTempData = json_decode($this->bot->BotWrapperCurrentUserStore['state_temp_data'], true);
     $this->thisFormCurrentFieldName = $this->detectCurrentField();
     $thisField = $this->userStateTempData['form'][$this->thisFormCurrentFieldName];
     if ($this->isEnd()) {
+      var_dump($this->userStateTempData);
       $this->sendTyping();
       $this->sendMessage([
-        'text' => "Спасибо за обращение! Наши менеджеры свяжутся с вами для подтверждения записи."
+        'text' => $this->userStateTempData['form_info']['end_text']
       ]);
-      print_r('Send filled user data');
+//      print_r('Send filled user data');
+      $this->sendMail([
+        'to' => 'youxenux@gmail.com',
+        'from' => 'noreply@hyundai-bot.local',
+        'topic' => $this->userStateTempData['form_info']['form_name'],
+        'msg' => "Заявка из Telegram бота: {$this->userStateTempData['form_info']['form_name']}<br>" . $this->getSendMailData()
+      ]);
       return;
     }
     if ($thisField['start'] !== true) {
@@ -107,9 +124,10 @@ class Form extends BaseState
       $this->sendMessage($params);
       $thisField['start'] = true;
       $this->userStateTempData['form'][$this->thisFormCurrentFieldName] = $thisField;
-      $this->setUserFormState($this->userStateTempData['form']);
+      $this->setUserFormState($this->userStateTempData);
+//      $this->setUserFormState($this->userStateTempData['form']);
     }
-    print_r($this->thisFormCurrentFieldName . "\r");
+//    print_r($this->thisFormCurrentFieldName . "\r");
   }
   
   public function detectCurrentField()
@@ -120,6 +138,15 @@ class Form extends BaseState
         return $fieldName;
       }
     }
+  }
+  
+  public function getSendMailData()
+  {
+    $msg = '';
+    foreach ($this->userStateTempData['form'] as $fieldName => $field) {
+      $msg .= "{$field['text']} {$field['result']}<br>";
+    }
+    return $msg;
   }
   
   public function isEnd()
@@ -133,8 +160,33 @@ class Form extends BaseState
   public function setUserFormState(array $fields)
   {
 //    print_r('Set user form state');
-    $this->bot->BotWrapperCurrentUserStore['state_temp_data'] = json_encode(['form' => $fields]);
+    $this->bot->BotWrapperCurrentUserStore['state_temp_data'] = json_encode($fields);
     R::store($this->bot->BotWrapperCurrentUserStore);
+  }
+  
+  public function sendMail(array $params)
+  {
+    
+    if ($params['to'] && $params['msg']) {
+      $mail = new PHPMailer(true);
+
+      try {
+        
+        $mail->setFrom($params['from'], 'Mailer');
+        $mail->addAddress($params['to']);     // Add a recipient
+
+        // Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = $params['topic'];
+        $mail->Body    = $params['msg'];
+
+        $mail->send();
+        echo "Message has been sent\r\n";
+      } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+      }  
+    }
+    
   }
 
 }
