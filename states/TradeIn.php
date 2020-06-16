@@ -2,14 +2,11 @@
 
 use RedBeanPHP\R;
 
-class TradeIn
+class TradeIn extends BaseState
 {
-  
-  const state = "TradeIn";
-  
+  public $state = "TradeIn";
   public function init($bot)
   {
-    return ['text' => 'Оформляемся по Tradein'];
+    parent::init($bot);
   }
-  
 }
