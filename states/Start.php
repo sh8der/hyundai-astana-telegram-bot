@@ -42,7 +42,8 @@ class Start extends BaseState
     if (!empty($sendMessageData)) {
       $this->sendMessage($sendMessageData);
     }
-
+    
+    $this->clearTempUserData();
     $this->bot->updateUserState($this->state);
   }
 }

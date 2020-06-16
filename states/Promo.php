@@ -33,11 +33,5 @@ class Promo extends BaseState
   {
     $this->bot->sendPhoto($params);
   }  
-  public function sendTyping()
-  {
-    $this->bot->sendChatAction([
-      'chat_id' => $this->bot->BotWrapperCurrentChatId,
-      'action' => 'typing'
-    ]);
-  }
+  
 }

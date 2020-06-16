@@ -37,3 +37,4 @@ composer.lock
 *.png
 menu-markup.json
 playground.php
+.editorconfig

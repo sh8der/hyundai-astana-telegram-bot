@@ -40,10 +40,11 @@ class BotWrapper extends \Telegram\Bot\Api
 
   public function getStateControllerName($phrase, $lang)
   {
-    return R::getCell(
+    $name = R::getCell(
       'SELECT `bounded_state` FROM `phrases_list` WHERE `lang` IN(?, "*") AND `phrase` = ? LIMIT 1',
       [$lang, $phrase]
     );
+    return ($name !== null) ? $name : "CurrentState";
   }
 
   public function startReply()
@@ -76,6 +77,15 @@ class BotWrapper extends \Telegram\Bot\Api
 
   }
 
+  public function loadUser()
+  {
+    $this->BotWrapperCurrentUserStore = R::findOne(
+      'users',
+      'telegram_id = ?',
+      [$this->BotWrapperCurrentUserID]
+    );
+  }
+  
   private function storeUser($userID)
   {
     $user = $this->getUser($userID);

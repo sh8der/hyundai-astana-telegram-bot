@@ -68,3 +68,8 @@ function writeToLogFile(array $attr)
   $currentDateTime = date('m.d.Y H:i');
   file_put_contents($file, "[{$currentDateTime}] : {$data}\r", FILE_APPEND);
 }
+
+function isJSON($string)
+{
+  return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE);
+}

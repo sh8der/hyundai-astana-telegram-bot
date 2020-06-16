@@ -122,7 +122,7 @@ class BaseState
 
   }
 
-  public function sendMessage($message = [])
+  public function sendMessage(array $message)
   {
     $sendData = [
       'chat_id' => $this->bot->BotWrapperCurrentChatId,
@@ -139,4 +139,19 @@ class BaseState
     }
     $this->bot->sendMessage($sendData);
   }
+  
+  public function sendTyping()
+  {
+    $this->bot->sendChatAction([
+      'chat_id' => $this->bot->BotWrapperCurrentChatId,
+      'action' => 'typing'
+    ]);
+  }
+  
+  public function clearTempUserData()
+  {
+    $this->bot->BotWrapperCurrentUserStore['state_temp_data'] = '';
+    R::store($this->bot->BotWrapperCurrentUserStore);
+  }
+  
 }
