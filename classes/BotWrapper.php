@@ -95,7 +95,7 @@ class BotWrapper extends \Telegram\Bot\Api
       $newUser['telegram_id'] = $userID;
       $newUser['name'] = $webHookUpdate->getFrom()->getFirstName();
       if (!empty($webHookUpdate->getFrom()->getLastName())) {
-        $newUser .= " " . $webHookUpdate->getFrom()->getLastName();
+        $newUser['name'] .= " " . $webHookUpdate->getFrom()->getLastName();
       }
       $newUser['current_state'] = 'start';
       $newUser['lang'] = 'ru';
