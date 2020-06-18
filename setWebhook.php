@@ -5,7 +5,10 @@ $guzzle = new GuzzleHttp\Client(['verify' => false]);
 $token = getOptions()['TELEGRAM_BOT_TOKEN'];
 $production = (bool)getOptions()['PRODUCTION'];
 if ($production) {
-  $currentPublicUrl = "https://" . trim($_SERVER['HTTP_HOST']) . "/bot.php";
+  $botSubFolder = "";
+  if (array_key_exists('BOT_FOLDER', getOptions()))
+    $botSubFolder = "/" . getOptions()['BOT_FOLDER'];
+  $currentPublicUrl = "https://" . trim($_SERVER['HTTP_HOST']) . "{$botSubFolder}/bot.php";
 } else {
   $currentPublicUrl = getNgrokPublicUrl() . "/bot.php";
 }
