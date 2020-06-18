@@ -8,9 +8,11 @@ class BaseState
   public $oldStateName = null;
   public $bot = null;
   public $replyMessage = null;
-
+  public $production = null;
+  
   public function init($bot)
   {
+    $this->production = (bool)getOptions()['PRODUCTION'];
     $this->bot = $bot;
     $lang = $this->bot->BotWrapperCurrentUserStore['lang'];
     $sendMessageData = [];
@@ -61,7 +63,14 @@ class BaseState
     if ($telegramImgId) {
       $replyImage = $telegramImgId;
     } else {
-      $replyImage = getNgrokPublicUrl() . $imgPath;
+      if ($this->production) {
+        $botSubFolder = "";
+        if (array_key_exists('BOT_FOLDER', getOptions()))
+          $botSubFolder = "/" . getOptions()['BOT_FOLDER'];
+        $replyImage = "https://" . trim($_SERVER['HTTP_HOST']) . "{$botSubFolder}{$imgPath}";
+      } else {
+        $replyImage = getNgrokPublicUrl() . $imgPath;
+      }
     }
 
     $this->bot->sendChatAction([
