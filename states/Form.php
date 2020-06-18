@@ -31,7 +31,8 @@ class Form extends BaseState
       $this->thisFormFields = json_decode($this->thisForm['fields'], true);
       $this->userStateTempData['form_info'] = [
         'end_text' => $this->thisForm['end_text'],
-        'form_name' => $this->bot->BotWrapperCurrentMessageText
+        'form_name' => $this->bot->BotWrapperCurrentMessageText,
+        'recipient_list' => $this->thisForm['recipient_list']
       ];
 //      var_dump($this->userStateTempData);
       $this->sendTyping();
@@ -104,8 +105,8 @@ class Form extends BaseState
       ]);
 //      print_r('Send filled user data');
       $this->sendMail([
-        'to' => 'youxenux@gmail.com',
-        'from' => 'noreply@hyundai-bot.local',
+        'to' => $this->userStateTempData['form_info']['recipient_list'],
+        'from' => getOptions()['EMAIL_FROM'],
         'topic' => $this->userStateTempData['form_info']['form_name'],
         'msg' => "Заявка из Telegram бота: {$this->userStateTempData['form_info']['form_name']}<br>" . $this->getSendMailData()
       ]);
@@ -173,7 +174,13 @@ class Form extends BaseState
       try {
         
         $mail->setFrom($params['from'], 'Mailer');
-        $mail->addAddress($params['to']);     // Add a recipient
+        
+        if ( count( explode(',', $params['to']) ) !== 1 ) {
+          foreach (explode(',', $params['to']) as $email)
+            $mail->addAddress( trim($email) );
+        } else {
+          $mail->addAddress($params['to']);     // Add a recipient
+        }
 
         // Content
         $mail->isHTML(true);                                  // Set email format to HTML
