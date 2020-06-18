@@ -34,7 +34,6 @@ class Form extends BaseState
         'form_name' => $this->bot->BotWrapperCurrentMessageText,
         'recipient_list' => $this->thisForm['recipient_list']
       ];
-//      var_dump($this->userStateTempData);
       $this->sendTyping();
       $this->sendMessage([
         'text' => $this->thisForm['start_text']
@@ -43,7 +42,6 @@ class Form extends BaseState
       $this->setUserFormState($this->userStateTempData);
     }
     $this->thisFormCurrentFieldName = $this->detectCurrentField();
-//    print_r($this->thisFormCurrentFieldName);
     $this->startPool($this->thisFormCurrentFieldName);
   }
   
@@ -83,27 +81,22 @@ class Form extends BaseState
     }
 
     $this->userStateTempData['form'][$fieldName] = $thisField;
-    var_dump($this->userStateTempData);
     $this->setUserFormState($this->userStateTempData);
-//    $this->setUserFormState($this->userStateTempData['form']);
     if ($this->toNextStep)
       $this->nextStep();
   }
 
   public function nextStep()
   {
-//    print_r("to next step\r");
     $this->bot->loadUser();
     $this->userStateTempData = json_decode($this->bot->BotWrapperCurrentUserStore['state_temp_data'], true);
     $this->thisFormCurrentFieldName = $this->detectCurrentField();
     $thisField = $this->userStateTempData['form'][$this->thisFormCurrentFieldName];
     if ($this->isEnd()) {
-      var_dump($this->userStateTempData);
       $this->sendTyping();
       $this->sendMessage([
         'text' => $this->userStateTempData['form_info']['end_text']
       ]);
-//      print_r('Send filled user data');
       $this->sendMail([
         'to' => $this->userStateTempData['form_info']['recipient_list'],
         'from' => getOptions()['EMAIL_FROM'],
@@ -126,9 +119,7 @@ class Form extends BaseState
       $thisField['start'] = true;
       $this->userStateTempData['form'][$this->thisFormCurrentFieldName] = $thisField;
       $this->setUserFormState($this->userStateTempData);
-//      $this->setUserFormState($this->userStateTempData['form']);
     }
-//    print_r($this->thisFormCurrentFieldName . "\r");
   }
   
   public function detectCurrentField()
@@ -154,13 +145,11 @@ class Form extends BaseState
   {
     $fields = $this->userStateTempData['form'];
     $result = end($fields)['complete'];
-    var_dump($result);
     return $result;
   }
 
   public function setUserFormState(array $fields)
   {
-//    print_r('Set user form state');
     $this->bot->BotWrapperCurrentUserStore['state_temp_data'] = json_encode($fields);
     R::store($this->bot->BotWrapperCurrentUserStore);
   }
