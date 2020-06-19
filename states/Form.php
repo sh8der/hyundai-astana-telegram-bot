@@ -159,7 +159,7 @@ class Form extends BaseState
     
     if ($params['to'] && $params['msg']) {
       $mail = new PHPMailer(true);
-
+      $mail->CharSet = "UTF-8";
       try {
         
         $mail->setFrom($params['from'], 'Mailer');
