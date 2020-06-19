@@ -8,9 +8,11 @@ class Contacts extends BaseState
   public $replyMessage = null;
   public $bot = null;
   public $img = null;
+  public $production = null;
 
   public function init($bot)
   {
+    $this->production = (bool)getOptions()['PRODUCTION'];
     $this->bot = $bot;
     $this->replyMessage = R::getRow(
       'SELECT `image_list`, `message` FROM `reply_dictionary` WHERE `state` = ?',
